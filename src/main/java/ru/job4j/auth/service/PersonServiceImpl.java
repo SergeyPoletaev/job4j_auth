@@ -1,6 +1,7 @@
 package ru.job4j.auth.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.job4j.auth.model.Person;
 import ru.job4j.auth.repository.PersonRepository;
@@ -12,10 +13,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PersonServiceImpl implements PersonService {
     private final PersonRepository personRepository;
+    private final PasswordEncoder encoder;
 
     @Override
     public Person save(Person person) {
-        return personRepository.save(person);
+        return personRepository.save(person.setPassword(encoder.encode(person.getPassword())));
     }
 
     @Override

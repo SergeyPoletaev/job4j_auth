@@ -28,7 +28,7 @@ public class PersonController {
                 person.isPresent() ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/")
+    @PostMapping("/sign-up")
     public ResponseEntity<Person> save(@RequestBody Person person) {
         return new ResponseEntity<>(personService.save(person), HttpStatus.CREATED);
     }
