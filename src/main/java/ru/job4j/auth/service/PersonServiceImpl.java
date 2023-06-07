@@ -40,4 +40,9 @@ public class PersonServiceImpl implements PersonService {
     public List<Person> findAll() {
         return personRepository.findAll();
     }
+
+    @Override
+    public Optional<Person> findByLogin(String login) {
+        return personRepository.findByLogin(login);
+    }
 }
