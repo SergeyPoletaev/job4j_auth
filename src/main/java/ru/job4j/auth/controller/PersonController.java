@@ -1,14 +1,17 @@
 package ru.job4j.auth.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.auth.model.Person;
+import ru.job4j.auth.model.dto.PersonDto;
 import ru.job4j.auth.security.RoleTypes;
 import ru.job4j.auth.service.PersonService;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PersonController {
     private final PersonService personService;
+    private final ObjectMapper objectMapper;
 
     @GetMapping("/")
     @PreAuthorize(RoleTypes.READER)
@@ -43,6 +47,14 @@ public class PersonController {
     @PreAuthorize(RoleTypes.ADMIN)
     public ResponseEntity<Void> delete(@PathVariable int id) {
         return personService.delete(id)
+                ? ResponseEntity.ok().build() : ResponseEntity.internalServerError().build();
+    }
+
+    @PatchMapping
+    @PreAuthorize(RoleTypes.EDITOR)
+    public ResponseEntity<Void> patch(@RequestBody PersonDto personDto)
+            throws InvocationTargetException, IllegalAccessException {
+        return personService.patch(objectMapper.convertValue(personDto, Person.class))
                 ? ResponseEntity.ok().build() : ResponseEntity.internalServerError().build();
     }
 }
